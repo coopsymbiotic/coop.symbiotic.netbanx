@@ -121,7 +121,7 @@ function netbanx_civicrm_buildForm_CRM_Event_Form_Registration_ThankYou(&$form) 
  * Called from CRM/Netbanx/Form/ThankYouReceipt.tpl
  */
 function netbanx_civicrm_receipt($trx_id) {
-  return  db_query('SELECT receipt FROM {civicrmdesjardins_receipt} WHERE trx_id = :trx_id', array(':trx_id' => $trx_id))->fetchField();
+  return  db_query('SELECT receipt FROM {civicrm_netbanx_receipt} WHERE trx_id = :trx_id', array(':trx_id' => $trx_id))->fetchField();
 }
 
 /**
@@ -160,11 +160,7 @@ function netbanx_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = arr
       CRM_Core_Error::debug_log_message('Netbanx receipt token failed for ' . $contact_id);
     }
 
-    $tx = $dao->trxn_id;
-    watchdog('netbanx', 'TX found for ' . $contact_id . ' = ' . $tx);
-
-    // $tx = db_query("select invoice_id from {civicrm_contribution} where contact_id = :id order by receive_date desc limit 1", array(':id' => $cid))->fetchField();
-    $receipt = db_query("select receipt from {civicrmdesjardins_receipt} where trx_id = :tx", array(':tx' => $tx))->fetchField();
+    $receipt = db_query("select receipt from {civicrm_netbanx_receipt} where trx_id = :tx", array(':tx' => $dao->trxn_id))->fetchField();
   
     $values[$cid]['contribution.netbanx_receipt'] = $receipt;
   }

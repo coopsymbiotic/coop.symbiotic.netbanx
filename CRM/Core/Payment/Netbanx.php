@@ -252,7 +252,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
       $params['trxn_result_code'] = $response->confirmationNumber . "-" . $response->authCode . "-" . $response->cvdResponse . "-" . $response->avsResponse;
     }
 
-    db_query("INSERT INTO {civicrmdesjardins_receipt} (trx_id, receipt, first_name, last_name, card_type, card_number, timestamp, ip)
+    db_query("INSERT INTO {civicrm_netbanx_receipt} (trx_id, receipt, first_name, last_name, card_type, card_number, timestamp, ip)
               VALUES (:trx_id, :receipt, :first_name, :last_name, :card_type, :card_number, :timestamp, :ip)",
               array(
                 ':trx_id' => $params['trxn_id'],
@@ -681,7 +681,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
   function isTooManyTransactions($params) {
     $ip = $params['ip_address'];
 
-    $nb_tx_lately = db_query('SELECT count(*) from {civicrmdesjardins_receipt}
+    $nb_tx_lately = db_query('SELECT count(*) from {civicrm_netbanx_receipt}
        WHERE ip = :ip and timestamp > UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 1 HOUR))',
        array(':ip' => $ip))->fetchField();
 
@@ -776,7 +776,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
       reporterror_civicrm_handler($variables);
     }
 
-    db_query("INSERT INTO {civicrmdesjardins_log} (trx_id, timestamp, type, message, fail, ip)
+    db_query("INSERT INTO {civicrm_netbanx_log} (trx_id, timestamp, type, message, fail, ip)
                VALUES (:trx_id, :timestamp, :type, :message, :fail, :ip)",
               array(':trx_id' => $this->invoice_id, ':timestamp' => $time, ':type' => $type, ':message' => $message, ':fail' => $fail, ':ip' => $this->ip));
   }

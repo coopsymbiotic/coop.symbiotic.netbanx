@@ -17,7 +17,7 @@ INSTALLATION:
 
 * In CiviCRM > Admin > CiviMail > Message templates (/civicrm/admin/messageTemplates?reset=1),
   go to the "System messages" subtab. Edit the "Contributions - Receipt (on-line)" template
-  and add the token "Desjardins CC receipt", i.e. {contribution.desjardins_receipt} in the 
+  and add the token "Desjardins CC receipt", i.e. {contribution.netbanx_receipt} in the 
   "credit card information" section of the template (both HTML and text formats).
 
 * In the receipt template, add a section with the "Terms and conditions", including
