@@ -1,30 +1,31 @@
 <?xml version="1.0"?>
-<extension key="ca.nodisys.netbanx" type="module">
+<extension key="coop.symbiotic.netbanx" type="module">
   <file>netbanx</file>
   <name>Netbanx</name>
-  <description>Netbanx payment gateway for CiviCRM (hosted page, autonomous, without redirection).</description>
+  <description>Netbanx payment gateway for CiviCRM (hosted page, autonomous, without redirection). Supports Desjardins Evolution solutions.</description>
   <license>AGPL 3</license>
   <maintainer>
     <author>Mathieu Lutfy</author>
-    <email>mathieu@nodisys.ca</email>
+    <email>mathieu@symbiotic.coop</email>
   </maintainer>
   <releaseDate>2013-11-07</releaseDate>
   <version>1.0</version>
-  <develStage>alpha</develStage>
+  <develStage>stable</develStage>
   <compatibility>
     <ver>4.3</ver>
     <ver>4.4</ver>
     <ver>4.5</ver>
     <ver>4.6</ver>
+    <ver>4.7</ver>
   </compatibility>
   <comments></comments>
   <civix>
     <namespace>CRM/Netbanx</namespace>
   </civix>
   <urls>
-    <url desc="Main Extension Page">https://github.com/mlutfy/ca.nodisys.netbanx</url>
-    <url desc="Documentation">https://github.com/mlutfy/ca.nodisys.netbanx/blob/master/README.md</url>
-    <url desc="Support">http://forum.civicrm.org/index.php/board,57.0.html</url>
-    <url desc="Licensing">http://civicrm.org/licensing</url>
+    <url desc="Main Extension Page">https://github.com/coopsymbiotic/coop.symbiotic.netbanx</url>
+    <url desc="Documentation">https://github.com/coopsymbiotic/coop.symbiotic.netbanx/blob/master/README.md</url>
+    <url desc="Support">https://forum.civicrm.org/index.php/board,57.0.html</url>
+    <url desc="Licensing">https://civicrm.org/licensing</url>
   </urls>
 </extension>
