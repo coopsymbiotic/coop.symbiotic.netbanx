@@ -154,60 +154,53 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
       'billingDetails' => self::netbanxGetBillingDetails($params),
     );
 
-    if ($this->_mode == 'test') {
-      $data = array(
-        'merchantRefNum' => $this->invoice_id,  // string max 255 chars
-        'settleWithAuth' => TRUE,
-        'amount' => self::netbanxGetAmount($params),
-        'customerIp' => $params['ip_address'],
-      );
+    $data = array(
+      'merchantRefNum' => $this->invoice_id,  // string max 255 chars
+      'settleWithAuth' => TRUE,
+      'amount' => self::netbanxGetAmount($params),
+      'customerIp' => $params['ip_address'],
+    );
 
-      if (CRM_Utils_Array::value('is_recur', $params)) {
-        // TODO: This is not yet fully handled. It will create the
-        // customer, address and card in Netbanx's Customer Vault,
-        // but the resulting token is not saved in CiviCRM for regular
-        // processing.
-        $frequency = $params['frequency_unit'];
-        $installments = $params['installments'];
+    if (CRM_Utils_Array::value('is_recur', $params)) {
+      // TODO: This is not yet fully handled. It will create the
+      // customer, address and card in Netbanx's Customer Vault,
+      // but the resulting token is not saved in CiviCRM for regular
+      // processing.
+      $frequency = $params['frequency_unit'];
+      $installments = $params['installments'];
 
-        $vault = $this->netbanxCustomerVaultCreate([
-          // NB: we would have to manage locally which customers always exist,
-          // and we don't really care about duplicates, so just create a new
-          // profile for each recurrent transaction (there shouldn't be that many).
-          'merchantCustomerId' => $params['invoiceID'],
-          'locale' => $this->netbanxGetLocale($params),
-          'firstName' => $params['first_name'],
-          'lastName' => $params['last_name'],
-          'email' => $params['email-5'],
-          // FIXME not ideal, assumes billing-phone in profile:
-          'phone' => CRM_Utils_Array::value('phone-5-1', $params),
-          'ip' => $params['ip_address'],
-          'addresses' => [
-            $this->netbanxGetBillingDetails($params, TRUE),
-          ],
-          'cards' => [
-            $this->netbanxGetCard($params, TRUE),
-          ],
-        ]);
+      $vault = $this->netbanxCustomerVaultCreate([
+        // NB: we would have to manage locally which customers always exist,
+        // and we don't really care about duplicates, so just create a new
+        // profile for each recurrent transaction (there shouldn't be that many).
+        'merchantCustomerId' => $params['invoiceID'],
+        'locale' => $this->netbanxGetLocale($params),
+        'firstName' => $params['first_name'],
+        'lastName' => $params['last_name'],
+        'email' => $params['email-5'],
+        // FIXME not ideal, assumes billing-phone in profile:
+        'phone' => CRM_Utils_Array::value('phone-5-1', $params),
+        'ip' => $params['ip_address'],
+        'addresses' => [
+          $this->netbanxGetBillingDetails($params, TRUE),
+        ],
+        'cards' => [
+          $this->netbanxGetCard($params, TRUE),
+        ],
+      ]);
 
-        $data['card'] = array(
-          'paymentToken' => $vault['paymentToken'],
-        );
-      }
-      else {
-        $data['billingDetails'] = $this->netbanxGetBillingDetails($params);
-        $data['profile'] = $this->netbanxGetProfileDetails($params);
-        $data['card'] = $this->netbanxGetCard($params);
-      }
+      $data['card'] = [
+        'paymentToken' => $vault['paymentToken'],
+      ];
+    }
+    else {
+      $data['billingDetails'] = $this->netbanxGetBillingDetails($params);
+      $data['profile'] = $this->netbanxGetProfileDetails($params);
+      $data['card'] = $this->netbanxGetCard($params);
     }
 
     try {
-      if ($this->_mode == 'test') {
-        $response = $this->netbanxAuthorize($data);
-      }
-      else {
-        $response = self::netbanxPurchaseSoap($data);
-      }
+      $response = $this->netbanxAuthorize($data);
 
       if ($response == NULL) {
         return self::netbanxFailMessage('NBX010', 'netbanx response null', $params);
@@ -218,39 +211,20 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
       return self::error(ts('There was a communication problem with the payment processor. Please try again, or contact us for more information.'));
     }
 
-    if ($this->_mode == 'test') {
-      if ($response['status'] != 'COMPLETED') {
-        $receipt = $this->generateReceipt($params, $response, FALSE);
-        return $this->netbanxFailMessage($receipt, 'netbanx authorization declined', $params, $response);
-      }
-
-      // Success
-      $params['trxn_id']       = $response['id'];
-      # what? $params['gross_amount']  = $data['amount'];
-
-      // Assigning the receipt to the $params doesn't really do anything
-      // In previous versions, we would patch the core in order to show the receipt.
-      // It would be nice to have something in CiviCRM core in order to handle this.
-      $params['receipt_netbanx'] = self::generateReceipt($params, $response);
-      $params['trxn_result_code'] = $response['id'];
+    if ($response['status'] != 'COMPLETED') {
+      $receipt = $this->generateReceipt($params, $response, FALSE);
+      return $this->netbanxFailMessage($receipt, 'netbanx authorization declined', $params, $response);
     }
-    else {
-      // SOAP API
-      if ($response->decision != self::CIVICRM_NETBANX_PAYMENT_ACCEPTED) {
-        $receipt = self::generateReceiptOld($params, $response, FALSE);
-        return self::netbanxFailMessage($receipt, 'netbanx response declined', $params, $response);
-      }
 
-      // Success
-      $params['trxn_id']       = $response->confirmationNumber;
-      $params['gross_amount']  = $data['amount'];
+    // Success
+    $params['trxn_id'] = $response['id'];
+    # what? $params['gross_amount']  = $data['amount'];
 
-      // Assigning the receipt to the $params doesn't really do anything
-      // In previous versions, we would patch the core in order to show the receipt.
-      // It would be nice to have something in CiviCRM core in order to handle this.
-      $params['receipt_netbanx'] = self::generateReceiptOld($params, $response);
-      $params['trxn_result_code'] = $response->confirmationNumber . "-" . $response->authCode . "-" . $response->cvdResponse . "-" . $response->avsResponse;
-    }
+    // Assigning the receipt to the $params doesn't really do anything
+    // In previous versions, we would patch the core in order to show the receipt.
+    // It would be nice to have something in CiviCRM core in order to handle this.
+    $params['receipt_netbanx'] = self::generateReceipt($params, $response);
+    $params['trxn_result_code'] = $response['id'];
 
     db_query("INSERT INTO {civicrm_netbanx_receipt} (trx_id, receipt, first_name, last_name, card_type, card_number, timestamp, ip)
               VALUES (:trx_id, :receipt, :first_name, :last_name, :card_type, :card_number, :timestamp, :ip)",
@@ -299,12 +273,11 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     }
 
     // format: 10.00
+    // FIXME: remove? (was for SOAP backend)
     $amount = number_format($amount, 2, '.', '');
 
     // REST API expects an integer amount.
-    if ($this->_mode == 'test') {
-      $amount = $amount * 100;
-    }
+    $amount = $amount * 100;
 
     return $amount;
   }
@@ -324,14 +297,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
 
     // Add security code.
     if (! empty($params['cvv2'])) {
-      if ($this->_mode == 'test') {
-        $card['cvv'] = $params['cvv2'];
-      }
-      else {
-        $card['cvdIndicator'] = 1;
-        $card['cvdIndicatorSpecified'] = TRUE;
-        $card['cvd'] = $params['cvv2'];
-      }
+      $card['cvv'] = $params['cvv2'];
     }
 
     if ($is_vault) {
@@ -354,19 +320,9 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
       'zip' => $params['postal_code'],
     );
 
-    if ($this->_mode != 'test') {
-      $billing['firstName'] = $params['first_name'];
-      $billing['lastName'] = $params['last_name'];
-      $billing['countrySpecified'] = TRUE;
-      $billing['email'] = $params['email-5'];
-    }
-
     // Add state or region based on country
     if (in_array($params['country'], array('US', 'CA'))) {
       $billing['state'] = $params['state_province'];
-    }
-    elseif ($this->_mode != 'test') {
-      $billing['region'] = $params['state_province'];
     }
 
     if ($is_vault) {
@@ -480,53 +436,6 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
   }
 
   /**
-   * Initiates the soap client
-   * see @netbanxPurchase()
-   */
-  function netbanxGetSoapClient($service, $data) {
-    $wsdl_url = $this->netbanxGetWsdlUrl($service);
-
-    $opts = array(
-      'http' => array(
-        'user_agent' => 'PHPSoapClient'
-      ),
-      'cache_wsdl' => WSDL_CACHE_NONE,
-    );
-
-    $context = stream_context_create($opts);
-
-    $wsdl_url = CRM_Core_Resources::singleton()->getPath('coop.symbiotic.netbanx', 'creditcardservice-v1.wsdl');
-
-    return new SoapClient($wsdl_url, array(
-      'stream_context' => $context,
-      'cache_wsdl' => WSDL_CACHE_NONE, // or WSDL_CACHE_MEMORY WSDL_CACHE_NONE,?
-      'trace' => TRUE,
-    ));
-  }
-
-  /**
-   * Returns the appropriate web service URL
-   *
-   * FIXME: should use civicrm gateway settings, not hardcode URLs
-   */
-  function netbanxGetWsdlUrl($service) {
-    $url = NULL;
-
-    switch ($this->_mode) {
-      case 'test':
-        $url = 'https://webservices.test.optimalpayments.com/';
-        break;
-      case 'live':
-        $url = 'https://webservices.optimalpayments.com/';
-        break;
-      default:
-        die('netbanxGetWsdlUrl: unknown mode: ' . $this->_mode);
-    }
-
-    return $url . $service . '/v1?wsdl';
-  }
-
-  /**
    * Returns the appropriate endpoint URL to process Authorization requests.
    */
   function getAuthorizationEndpoint() {
@@ -544,42 +453,6 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     $merchant_number = $this->_paymentProcessor['subject'];
 
     return $url;
-  }
-
-  /**
-   * Send the purchase request to Netbanx
-   */
-  function netbanxPurchaseSoap($data) {
-    self::log($data, 'netbanx request');
-
-    $netbanx = $this->netbanxGetSoapClient(self::CIVICRM_NETBANX_SERVICE_CREDIT_CARD, $data);
-
-    if (! $netbanx) {
-      return NULL;
-    }
-
-    $response = $netbanx->ccPurchase(array('ccAuthRequestV1' => $data));
-    $v1 = $response->ccTxnResponseV1;
-
-    // re-order the vendor-specific data (ex: Desjardins)
-    // otherwise it's an array and doesn't look very reliable:
-    /*
-     [detail] => Array (
-       [0] => stdClass Object ( [tag] => BATCH_NUMBER [value] => 019)
-       [1] => stdClass Object ( [tag] => SEQ_NUMBER [value] => 036)
-       [2] => stdClass Object ( [tag] => EFFECTIVE_DATE [value] => 121003)
-       [3] => stdClass Object ( [tag] => TERMINAL_ID [value] => 85025505))
-    */
-    if (property_exists($v1, 'addendumResponse')) {
-      $v1->addendum = array();
-
-      foreach ($v1->addendumResponse->detail as $key => $val) {
-        $tag = $val->tag;
-        $v1->addendum[$tag] = $val->value;
-      }
-    }
-
-    return $v1;
   }
 
   /**
