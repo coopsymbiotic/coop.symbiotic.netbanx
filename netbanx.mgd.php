@@ -1,7 +1,7 @@
 <?php
 return array(
   0 => array(
-    'module' => 'ca.nodisys.netbanx',
+    'module' => 'coop.symbiotic.netbanx',
     'name' => 'Netbanx',
     'entity' => 'PaymentProcessorType',
     'params' => array(

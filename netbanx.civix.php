@@ -151,7 +151,7 @@ function _netbanx_civix_civicrm_managed(&$entities) {
     $es = include $file;
     foreach ($es as $e) {
       if (empty($e['module'])) {
-        $e['module'] = 'ca.nodisys.netbanx';
+        $e['module'] = 'coop.symbiotic.netbanx';
       }
       $entities[] = $e;
     }

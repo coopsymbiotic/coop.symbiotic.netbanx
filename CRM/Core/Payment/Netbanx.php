@@ -7,8 +7,8 @@
  | Copyright Mathieu Lutfy 2010-2015                                  |
  | https://www.symbiotic.coop                                         |
  |                                                                    |
- | This file is part of the ca.nodisys.netbanx extension.             |
- | https://github.com/mlutfy/ca.nodisys.netbanx                       |
+ | This file is part of the coop.symbiotic.netbanx extension.         |
+ | https://github.com/coopsymbiotic/coop.symbiotic.netbanx            |
  |                                                                    |
  | See README.md for more information (support, license, etc).        |
  +--------------------------------------------------------------------+
@@ -495,7 +495,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
 
     $context = stream_context_create($opts);
 
-    $wsdl_url = CRM_Core_Resources::singleton()->getPath('ca.nodisys.netbanx', 'creditcardservice-v1.wsdl');
+    $wsdl_url = CRM_Core_Resources::singleton()->getPath('coop.symbiotic.netbanx', 'creditcardservice-v1.wsdl');
 
     return new SoapClient($wsdl_url, array(
       'stream_context' => $context,

@@ -93,7 +93,7 @@ function netbanx_civicrm_buildForm_CRM_Contribute_Form_Contribution_Main(&$form)
   ));
 
   $resources = CRM_Core_Resources::singleton();
-  $resources->addStyleFile('ca.nodisys.netbanx', 'netbanx.css');
+  $resources->addStyleFile('coop.symbiotic.netbanx', 'netbanx.css');
 }
 
 /**

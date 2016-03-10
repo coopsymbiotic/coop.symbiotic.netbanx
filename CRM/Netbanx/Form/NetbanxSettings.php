@@ -22,12 +22,12 @@ class CRM_Netbanx_Form_NetbanxSettings extends CRM_Core_Form {
 
   function buildQuickForm() {
     CRM_Core_Resources::singleton()
-      ->addStyleFile('ca.nodisys.netbanx', 'netbanx.settings.css')
-      ->addScriptFile('ca.nodisys.netbanx', 'netbanx.settings.js');
+      ->addStyleFile('coop.symbiotic.netbanx', 'netbanx.settings.css')
+      ->addScriptFile('coop.symbiotic.netbanx', 'netbanx.settings.js');
 
     CRM_Core_Resources::singleton()->addSetting(array(
       'netbanx' => array(
-        'baseurl_images' =>CRM_Core_Resources::singleton()->getUrl('ca.nodisys.netbanx', '/images/'),
+        'baseurl_images' =>CRM_Core_Resources::singleton()->getUrl('coop.symbiotic.netbanx', '/images/'),
       ),
     ));
 

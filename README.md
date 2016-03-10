@@ -6,7 +6,7 @@ It supports the payment method "without redirection" (post, not notify).
 In Netbanx terms, this is the "Card Payments API".
 
 The latest version of this extension can be found at:  
-https://github.com/mlutfy/ca.nodisys.netbanx
+https://github.com/coopsymbiotic/coop.symbiotic.netbanx
 
 FEATURES
 --------
@@ -84,7 +84,7 @@ SUPPORT
 -------
 
 Please post bug reports in the issue tracker of this project on github:  
-https://github.com/mlutfy/ca.nodisys.netbanx/issues
+https://github.com/coopsymbiotic/coop.symbiotic.netbanx/issues
 
 For general support questions, please use the CiviCRM Extensions forum:  
 http://forum.civicrm.org/index.php/board,57.0.html
@@ -93,7 +93,7 @@ This is a community contributed extension written thanks to the financial
 support of organisations using it, as well as the very helpful and collaborative
 CiviCRM community.
 
-While I do my best to provide volunteer support for this extension, please
+While we do our best to provide community support for this extension, please
 consider financially contributing to support or development of this extension
 if you can.
 
@@ -103,7 +103,8 @@ https://www.symbiotic.coop
 LICENSE
 -------
 
-Copyright (C) 2011-2015 Mathieu Lutfy <mathieu@symbiotic.coop>  
+Copyright (C) 2011-2016 Mathieu Lutfy <mathieu@symbiotic.coop>  
+Copyright (C) 2016 Coop SymbioTIC <info@symbiotic.coop>  
 https://www.symbiotic.coop
 
 License: AGPL v3: https://www.gnu.org/licenses/agpl.html
