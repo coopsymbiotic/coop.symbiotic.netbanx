@@ -91,7 +91,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
   function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
-    $this->_processorName = ts('Netbanx');
+    $this->_processorName = ts('Netbanx', array('domain' => 'coop.symbiotic.netbanx'));
   }
 
   /**
@@ -208,7 +208,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     }
     catch (Exception $e) {
       $this->log('Netbanx error: ' . $e->getMessage(), 'netbanx purchase fail', TRUE);
-      return self::error(ts('There was a communication problem with the payment processor. Please try again, or contact us for more information.'));
+      return self::error(ts('There was a communication problem with the payment processor. Please try again, or contact us for more information.', array('domain' => 'coop.symbiotic.netbanx')));
     }
 
     if ($response['status'] != 'COMPLETED') {
@@ -513,17 +513,18 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     }
 
     if (! isset($response['error']) || ! isset($response['error']['message'])) {
-      return ts('Unknown error.');
+      return ts('Unknown error.', array('domain' => 'coop.symbiotic.netbanx'));
     }
 
-    return ts($response['error']['message']) . ' (' . $response['error']['code'] . ')';
+    // FIXME: This is an intentional mis-use of ts(), see strings below.
+    return ts($response['error']['message'], array('domain' => 'coop.symbiotic.netbanx')) . ' (' . $response['error']['code'] . ')';
 
     // This is intentionally here so that the gettext string extractor will pickup the strings for the .pot files.
-    ts("The bank has requested that you process the transaction manually by calling the card holder's credit card company.");
-    ts('Your request has been declined by the issuing bank.');
-    ts('The card has been declined due to insufficient funds.');
-    ts('Your request has been declined because the issuing bank does not permit the transaction for this card.');
-    ts('An internal error occurred.');
+    ts("The bank has requested that you process the transaction manually by calling the card holder's credit card company.", array('domain' => 'coop.symbiotic.netbanx'));
+    ts('Your request has been declined by the issuing bank.', array('domain' => 'coop.symbiotic.netbanx'));
+    ts('The card has been declined due to insufficient funds.', array('domain' => 'coop.symbiotic.netbanx'));
+    ts('Your request has been declined because the issuing bank does not permit the transaction for this card.', array('domain' => 'coop.symbiotic.netbanx'));
+    ts('An internal error occurred.', array('domain' => 'coop.symbiotic.netbanx'));
   }
 
   /**
@@ -610,11 +611,11 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     $error = array();
 
     if (empty($this->_paymentProcessor['user_name'])) {
-      $error[] = ts('Merchant ID is not set in the Administer CiviCRM &raquo; Payment Processor.');
+      $error[] = ts('Merchant ID is not set in the Administer CiviCRM &raquo; Payment Processor.', array('domain' => 'coop.symbiotic.netbanx'));
     }
 
     if (empty($this->_paymentProcessor['password'])) {
-      $error[] = ts('Password is not set in the Administer CiviCRM &raquo; Payment Processor.');
+      $error[] = ts('Password is not set in the Administer CiviCRM &raquo; Payment Processor.', array('domain' => 'coop.symbiotic.netbanx'));
     }
 
     if (! empty($error)) {
@@ -683,34 +684,34 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
 
     $receipt .= self::getNameAndAddress() . "\n\n";
 
-    $receipt .= ts('CREDIT CARD TRANSACTION RECORD') . "\n\n";
+    $receipt .= ts('CREDIT CARD TRANSACTION RECORD', array('domain' => 'coop.symbiotic.netbanx')) . "\n\n";
 
     if (isset($response['txnTime'])) {
-      $receipt .= ts('Date: %1', array(1 => $response['txnTime'])) . "\n";
+      $receipt .= ts('Date: %1', array(1 => $response['txnTime'], 'domain' => 'coop.symbiotic.netbanx')) . "\n";
     }
     else {
-      $receipt .= ts('Date: %1', array(1 => date('Y-m-d H:i:s'))) . "\n";
+      $receipt .= ts('Date: %1', array(1 => date('Y-m-d H:i:s'), 'domain' => 'coop.symbiotic.netbanx')) . "\n";
     }
 
-    $receipt .= ts('Transaction: %1', array(1 => $this->invoice_id)) . "\n";
-    $receipt .= ts('ID: %1', array(1 => $response['id'])) . "\n";
-    $receipt .= ts('Type: purchase') . "\n"; // could be preauthorization, preauth completion, refund.
-    $receipt .= ts('Authorization: %1', array(1 => $response['authCode'])) . "\n";
+    $receipt .= ts('Transaction: %1', array(1 => $this->invoice_id, 'domain' => 'coop.symbiotic.netbanx')) . "\n";
+    $receipt .= ts('ID: %1', array(1 => $response['id'], 'domain' => 'coop.symbiotic.netbanx')) . "\n";
+    $receipt .= ts('Type: purchase', array('domain' => 'coop.symbiotic.netbanx')) . "\n"; // could be preauthorization, preauth completion, refund.
+    $receipt .= ts('Authorization: %1', array(1 => $response['authCode'], 'domain' => 'coop.symbiotic.netbanx')) . "\n";
 
-    $receipt .= ts('Credit card type: %1', array(1 => $params['credit_card_type'])) . "\n";
-    $receipt .= ts('Credit card holder name: %1', array(1 => $params['first_name'] . ' ' . $params['last_name'])) . "\n";
-    $receipt .= ts('Credit card number: %1', array(1 => self::netbanxGetCardForReceipt($params['credit_card_number']))) . "\n\n";
+    $receipt .= ts('Credit card type: %1', array(1 => $params['credit_card_type'], 'domain' => 'coop.symbiotic.netbanx')) . "\n";
+    $receipt .= ts('Credit card holder name: %1', array(1 => $params['first_name'] . ' ' . $params['last_name'], 'domain' => 'coop.symbiotic.netbanx')) . "\n";
+    $receipt .= ts('Credit card number: %1', array(1 => self::netbanxGetCardForReceipt($params['credit_card_number']), 'domain' => 'coop.symbiotic.netbanx')) . "\n\n";
 
-    $receipt .= ts('Transaction amount: %1', array(1 => CRM_Utils_Money::format($params['amount']))) . "\n\n";
+    $receipt .= ts('Transaction amount: %1', array(1 => CRM_Utils_Money::format($params['amount']), 'domain' => 'coop.symbiotic.netbanx')) . "\n\n";
 
     switch ($response['status']) {
       case 'COMPLETED':
-        $receipt .= ts('TRANSACTION APPROVED - THANK YOU') . "\n\n";
+        $receipt .= ts('TRANSACTION APPROVED - THANK YOU', array('domain' => 'coop.symbiotic.netbanx')) . "\n\n";
         break;
 
       case 'FAILED':
       default:
-        $receipt .= ts('TRANSACTION FAILED') . "\n\n";
+        $receipt .= ts('TRANSACTION FAILED', array('domain' => 'coop.symbiotic.netbanx')) . "\n\n";
 
         if (isset($response['error'])) {
           $receipt .= wordwrap($this->getErrorMessageTranslation($response)) . "\n\n";
@@ -733,8 +734,8 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
 
     // Add obligatory notes:
     $receipt .= "\n";
-    $receipt .= ts('Prices are in canadian dollars ($ CAD).') . "\n";
-    $receipt .= ts("This transaction is non-taxable.");
+    $receipt .= ts('Prices are in canadian dollars ($ CAD).', array('domain' => 'coop.symbiotic.netbanx')) . "\n";
+    $receipt .= ts("This transaction is non-taxable.", array('domain' => 'coop.symbiotic.netbanx'));
 
     return $receipt;
   }
@@ -752,35 +753,35 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
 
     $receipt .= self::getNameAndAddress() . "\n\n";
 
-    $receipt .= ts('CREDIT CARD TRANSACTION RECORD') . "\n\n";
+    $receipt .= ts('CREDIT CARD TRANSACTION RECORD', array('domain' => 'coop.symbiotic.netbanx')) . "\n\n";
 
-    $receipt .= ts('Date: %1', array(1 => $response->txnTime)) . "\n";
-    $receipt .= ts('Transaction: %1', array(1 => $this->invoice_id)) . "\n";
-    $receipt .= ts('Type: purchase') . "\n"; // could be preauthorization, preauth completion, refund.
-    $receipt .= ts('Authorization: %1', array(1 => $response->authCode)) . "\n";
-    $receipt .= ts('Confirmation: %1', array(1 => $response->confirmationNumber)) . "\n";
+    $receipt .= ts('Date: %1', array(1 => $response->txnTime, 'domain' => 'coop.symbiotic.netbanx')) . "\n";
+    $receipt .= ts('Transaction: %1', array(1 => $this->invoice_id, 'domain' => 'coop.symbiotic.netbanx')) . "\n";
+    $receipt .= ts('Type: purchase', array('domain' => 'coop.symbiotic.netbanx')) . "\n"; // could be preauthorization, preauth completion, refund.
+    $receipt .= ts('Authorization: %1', array(1 => $response->authCode, array('domain' => 'coop.symbiotic.netbanx'))) . "\n";
+    $receipt .= ts('Confirmation: %1', array(1 => $response->confirmationNumber, array('domain' => 'coop.symbiotic.netbanx'))) . "\n";
 
-    $receipt .= ts('Credit card type: %1', array(1 => $params['credit_card_type'])) . "\n";
-    $receipt .= ts('Credit card holder name: %1', array(1 => $params['first_name'] . ' ' . $params['last_name'])) . "\n";
-    $receipt .= ts('Credit card number: %1', array(1 => self::netbanxGetCardForReceipt($params['credit_card_number']))) . "\n\n";
+    $receipt .= ts('Credit card type: %1', array(1 => $params['credit_card_type'], 'domain' => 'coop.symbiotic.netbanx')) . "\n";
+    $receipt .= ts('Credit card holder name: %1', array(1 => $params['first_name'] . ' ' . $params['last_name'], 'domain' => 'coop.symbiotic.netbanx')) . "\n";
+    $receipt .= ts('Credit card number: %1', array(1 => self::netbanxGetCardForReceipt($params['credit_card_number']), 'domain' => 'coop.symbiotic.netbanx')) . "\n\n";
 
-    $receipt .= ts('Transaction amount: %1', array(1 => CRM_Utils_Money::format($params['amount']))) . "\n\n";
+    $receipt .= ts('Transaction amount: %1', array(1 => CRM_Utils_Money::format($params['amount']), 'domain' => 'coop.symbiotic.netbanx')) . "\n\n";
 
     if ($response->decision == self::CIVICRM_NETBANX_PAYMENT_ACCEPTED) {
-      $receipt .= ts('TRANSACTION APPROVED - THANK YOU') . "\n\n";
+      $receipt .= ts('TRANSACTION APPROVED - THANK YOU', array('domain' => 'coop.symbiotic.netbanx')) . "\n\n";
     }
     elseif ($response->decision == self::CIVICRM_NETBANX_PAYMENT_ERROR) {
-      $receipt .= wordwrap(ts('TRANSACTION CANCELLED - %1', array(1 => $response->description))) . "\n\n";
+      $receipt .= wordwrap(ts('TRANSACTION CANCELLED - %1', array(1 => $response->description, 'domain' => 'coop.symbiotic.netbanx'))) . "\n\n";
     }
     elseif ($response->decision == self::CIVICRM_NETBANX_PAYMENT_DECLINED) {
       $description = $response->description;
 
       // Silly.. but we try to translate as many messages as possible.
       if ($description == 'Your request has been declined by the issuing bank.') {
-        $description = ts('Your request has been declined by the issuing bank.');
+        $description = ts('Your request has been declined by the issuing bank.', array('domain' => 'coop.symbiotic.netbanx'));
       }
 
-      $receipt .= ts('TRANSACTION DECLINED - %1', array(1 => $description)) . "\n\n";
+      $receipt .= ts('TRANSACTION DECLINED - %1', array(1 => $description, 'domain' => 'coop.symbiotic.netbanx')) . "\n\n";
     }
     else {
       $receipt .= $response->decision . ' - ' . $response->description . "\n\n";
@@ -791,7 +792,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
       $tos_text = variable_get('civicrmdesjardins_tos_text', FALSE);
 
       if ($tos_url) {
-        $receipt .= ts("Terms and conditions:") . "\n";
+        $receipt .= ts("Terms and conditions:", array('domain' => 'coop.symbiotic.netbanx')) . "\n";
         $receipt .= $tos_url . "\n\n";
       }
 
@@ -802,8 +803,8 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
 
     // Add obligatory notes:
     $receipt .= "\n";
-    $receipt .= ts('Prices are in canadian dollars ($ CAD).') . "\n";
-    $receipt .= ts("This transaction is non-taxable.");
+    $receipt .= ts('Prices are in canadian dollars ($ CAD).', array('domain' => 'coop.symbiotic.netbanx')) . "\n";
+    $receipt .= ts("This transaction is non-taxable.", array('domain' => 'coop.symbiotic.netbanx'));
 
     return $receipt;
   }

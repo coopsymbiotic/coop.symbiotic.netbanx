@@ -32,21 +32,21 @@ class CRM_Netbanx_Form_NetbanxSettings extends CRM_Core_Form {
     ));
 
     $logos = array(
-      '' => ts('Do not display a logo'),
-      'powered_by_netbanx_standard.jpg' => ts('Netbanx (standard logo)'),
-      'powered_by_netbanx_uk.jpg' => ts('Netbanx (UK cards)'),
-      'powered_by_netbanx_visa_mc_amex.jpg' => ts('Netbanx (Visa/MasterCard/Amex)'),
-      'powered_by_netbanx_visa_mc.jpg' => ts('Netbanx (Visa/MasterCard)'),
-      'powered_by_netbanx_all.jpg' => ts('Netbanx (all cards)'),
-      'desjardins.png' => ts('Desjardins'),
+      '' => ts('Do not display a logo', array('domain' => 'coop.symbiotic.netbanx')),
+      'powered_by_netbanx_standard.jpg' => ts('Netbanx (standard logo)', array('domain' => 'coop.symbiotic.netbanx')),
+      'powered_by_netbanx_uk.jpg' => ts('Netbanx (UK cards)', array('domain' => 'coop.symbiotic.netbanx')),
+      'powered_by_netbanx_visa_mc_amex.jpg' => ts('Netbanx (Visa/MasterCard/Amex)', array('domain' => 'coop.symbiotic.netbanx')),
+      'powered_by_netbanx_visa_mc.jpg' => ts('Netbanx (Visa/MasterCard)', array('domain' => 'coop.symbiotic.netbanx')),
+      'powered_by_netbanx_all.jpg' => ts('Netbanx (all cards)', array('domain' => 'coop.symbiotic.netbanx')),
+      'desjardins.png' => ts('Desjardins', array('domain' => 'coop.symbiotic.netbanx')),
     );
 
-    $this->add('select', 'netbanx_logo', ts('Logo to display'), $logos, false);
+    $this->add('select', 'netbanx_logo', ts('Logo to display', array('domain' => 'coop.symbiotic.netbanx')), $logos, false);
 
     $this->addButtons(array(
       array(
         'type' => 'submit',
-        'name' => ts('Submit'),
+        'name' => ts('Submit', array('domain' => 'coop.symbiotic.netbanx')),
         'isDefault' => TRUE,
       ),
     ));
@@ -65,7 +65,7 @@ class CRM_Netbanx_Form_NetbanxSettings extends CRM_Core_Form {
     }
 
     // we will return to this form by default
-    CRM_Core_Session::setStatus(ts('Settings saved.', array('domain' => 'ca.bidon.imagecrop')), '', 'success');
+    CRM_Core_Session::setStatus(ts('Settings saved.', array('domain' => 'coop.symbiotic.netbanx')), '', 'success');
 
     parent::postProcess();
   }
