@@ -343,13 +343,17 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
   }
 
   /**
-   * Convert the locale/language to an accepted format. Defaults to en_US.
+   * Convert the locale/language to an accepted format.
    *
-   * This assumes that you have the preferred_language field included in your
-   * contribution/event form profile. We should probably also check the default
-   * site locale for non-multilingual sites.
+   * Depending on your configuration, it will return:
+   *  - the value of the field "preferred_language" if you have included it in your form,
+   *  - the value of $tsLocale, which is the language of the user interface,
+   *  - the value of $config->lcMessages, which is the default CiviCRM language,
+   *  - if all else fails, defaults to en_US.
    */
   function netbanxGetLocale($params) {
+    $lang = 'en_US';
+
     // Netbanx only supports fr_CA, en_US and en_UK.
     $map = array(
       'fr_CA' => 'fr_CA',
@@ -358,13 +362,24 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
       'en_GB' => 'en_GB',
     );
 
+    // This should always exist, i.e. default CiviCRM language.
+    $config = CRM_Core_Config::singleton();
+    $lang = $config->lcMessages;
+
+    // This usually exists as well, and is the current UI language.
+    global $tsLocale;
+
+    if (isset($tsLocale) && isset($map[$tsLocale])) {
+      $lang = $map[$tsLocale];
+    }
+
     if ($locale = CRM_Utils_Array::value('preferred_language', $params)) {
       if (isset($map[$locale])) {
-        return $map[$locale];
+        $lang = $map[$locale];
       }
     }
 
-    return 'en_US';
+    return $lang;
   }
 
   /**
