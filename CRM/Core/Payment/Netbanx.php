@@ -490,14 +490,12 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
 
     // FIXME: format: self::error(9003, 'Message here'); ?
     if (is_numeric($code)) {
-      return self::error(t("Error") . ": " . t('The transaction could not be processed, please contact us for more information.') . ' (code: ' . $code . ') '
-             . '<div class="civicrm-dj-retrytx">' . t("The transaction was not approved. Please verify your credit card number and expiration date.") . '</div>');
+      return self::error(ts("Error %1: The transaction could not be processed, please contact us for more information.", array(1 => $code, 'domain' => 'coop.symbiotic.netbanx')));
     }
 
-    return self::error(t('The transaction could not be processed, please contact us for more information.')
-           . '<div class="civicrm-dj-retrytx">' . t("The transaction was not approved. Please verify your credit card number and expiration date.") . '</div>'
+    return self::error('<div class="civicrm-netbanx-retrytx">' . ts("The transaction was not approved. Please verify your credit card number and expiration date.", array('domain' => 'coop.symbiotic.netbanx')) . '</div>'
            . '<div><strong>̈́' . $this->getErrorMessageTranslation($response) . '</strong></div>'
-           . '<br/><pre class="civicrm-dj-receiptfail">' . $code . '</pre>');
+           . '<br/><pre class="civicrm-netbanx-receiptfail">' . $code . '</pre>');
   }
 
   /**
@@ -525,6 +523,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     ts('The card has been declined due to insufficient funds.', array('domain' => 'coop.symbiotic.netbanx'));
     ts('Your request has been declined because the issuing bank does not permit the transaction for this card.', array('domain' => 'coop.symbiotic.netbanx'));
     ts('An internal error occurred.', array('domain' => 'coop.symbiotic.netbanx'));
+    ts('The external processing gateway has rejected the transaction.', array('domain' => 'coop.symbiotic.netbanx'));
   }
 
   /**
