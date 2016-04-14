@@ -161,7 +161,7 @@ function netbanx_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = arr
     }
 
     $receipt = db_query("select receipt from {civicrm_netbanx_receipt} where trx_id = :tx", array(':tx' => $dao->trxn_id))->fetchField();
-  
+
     $values[$cid]['contribution.netbanx_receipt'] = $receipt;
   }
 }
