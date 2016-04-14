@@ -408,7 +408,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
   }
 
   function netbanxSendRequest($webservice_url, $data, $description) {
-    require_once 'vendor/autoload.php';
+    require 'vendor/autoload.php';
     $client = new GuzzleHttp\Client();
 
     $json = NULL;
