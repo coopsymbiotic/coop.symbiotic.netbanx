@@ -1,0 +1,181 @@
+# Copyright CiviCRM LLC (c) 2004-2015
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: netbanx\n"
+"POT-Creation-Date: 2016-04-14 16:49-0400\n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Netbanx"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid ""
+"There was a communication problem with the payment processor. Please try "
+"again, or contact us for more information."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Unknown error."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid ""
+"The bank has requested that you process the transaction manually by calling "
+"the card holder's credit card company."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Your request has been declined by the issuing bank."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "The card has been declined due to insufficient funds."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid ""
+"Your request has been declined because the issuing bank does not permit the "
+"transaction for this card."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "An internal error occurred."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid ""
+"Merchant ID is not set in the Administer CiviCRM &raquo; Payment Processor."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid ""
+"Password is not set in the Administer CiviCRM &raquo; Payment Processor."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "CREDIT CARD TRANSACTION RECORD"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Date: %1"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Transaction: %1"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "ID: %1"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Type: purchase"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Authorization: %1"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Credit card type: %1"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Credit card holder name: %1"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Credit card number: %1"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Transaction amount: %1"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "TRANSACTION APPROVED - THANK YOU"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "TRANSACTION FAILED"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Terms and conditions:"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Prices are in canadian dollars ($ CAD)."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "This transaction is non-taxable."
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "Confirmation: %1"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "TRANSACTION CANCELLED - %1"
+msgstr ""
+
+#: CRM/Core/Payment/Netbanx.php
+msgid "TRANSACTION DECLINED - %1"
+msgstr ""
+
+#: CRM/Netbanx/Form/NetbanxSettings.php
+msgid "Do not display a logo"
+msgstr ""
+
+#: CRM/Netbanx/Form/NetbanxSettings.php
+msgid "Netbanx (standard logo)"
+msgstr ""
+
+#: CRM/Netbanx/Form/NetbanxSettings.php
+msgid "Netbanx (UK cards)"
+msgstr ""
+
+#: CRM/Netbanx/Form/NetbanxSettings.php
+msgid "Netbanx (Visa/MasterCard/Amex)"
+msgstr ""
+
+#: CRM/Netbanx/Form/NetbanxSettings.php
+msgid "Netbanx (Visa/MasterCard)"
+msgstr ""
+
+#: CRM/Netbanx/Form/NetbanxSettings.php
+msgid "Netbanx (all cards)"
+msgstr ""
+
+#: CRM/Netbanx/Form/NetbanxSettings.php
+msgid "Desjardins"
+msgstr ""
+
+#: CRM/Netbanx/Form/NetbanxSettings.php
+#: templates/CRM/Netbanx/Form/NetbanxSettings.hlp
+msgid "Logo to display"
+msgstr ""
+
+#: CRM/Netbanx/Form/NetbanxSettings.php
+msgid "Submit"
+msgstr ""
+
+#: CRM/Netbanx/Form/NetbanxSettings.php
+msgid "Settings saved."
+msgstr ""
+
+#: netbanx.php
+msgid "Netbanx credit card receipt"
+msgstr ""
+
+#: templates/CRM/Netbanx/Form/NetbanxSettings.hlp
+msgid "Save"
+msgstr ""
