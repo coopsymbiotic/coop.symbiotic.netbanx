@@ -179,3 +179,6 @@ msgstr ""
 #: templates/CRM/Netbanx/Form/NetbanxSettings.hlp
 msgid "Save"
 msgstr ""
+
+msgid "Payment secured by Desjardins"
+msgstr ""

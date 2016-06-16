@@ -213,3 +213,7 @@ msgstr "Reçu de carte de crédit Netbanx"
 #: templates/CRM/Netbanx/Form/NetbanxSettings.hlp
 msgid "Save"
 msgstr "Sauvegarder"
+
+#: templates/CRM/Netbanx/Form/BillingBlockLogo.tpl
+msgid "Payment secured by Desjardins"
+msgstr "Paiement sécurisé par Desjardins"

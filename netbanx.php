@@ -87,6 +87,9 @@ function netbanx_civicrm_buildForm($formName, &$form) {
  */
 function netbanx_civicrm_buildForm_CRM_Contribute_Form_Contribution_Main(&$form) {
   // Adds the credit card logo to the contribution page (billing block)
+  $logo_url = CRM_Core_Resources::singleton()->getUrl('coop.symbiotic.netbanx') . '/images/desjardins.png';
+  $form->assign('netbanx_logo_url', $logo_url);
+
   CRM_Core_Region::instance('billing-block')->add(array(
     'template' => 'CRM/Netbanx/Form/BillingBlockLogo.tpl',
     'weight' => -10,
