@@ -54,6 +54,22 @@ Drupal variables:
   as multi-lingual (admin/config/regional/i18n/variable) then go to config > system > variables
   (admin/config/system/variable) to translate the variables.
 
+Fix for events:
+
+* The Event ThankYou template must be overriden (templates/CRM/Event/Form/Registration/ThankYou.tpl)
+  in order to display the payment processor receipt (Desjardins requirement). This patch needs to
+  be sent upstream to CiviCRM. It adds a crmRegion around the CC information. The buildForm function
+  uses this in order to add extra details about the receipt.
+
+```
+    {if $contributeMode eq 'direct' and $paidEvent and ! $is_pay_later and !$isAmountzero and !$isOnWaitlist and !$isRequireApproval}
+      {crmRegion name="event-thankyou-billing-block"}
+        [...]
+      {/crmRegion}
+    {/if}
+```
+
+
 TESTING
 -------
 
