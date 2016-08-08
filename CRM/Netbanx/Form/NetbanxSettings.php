@@ -1,20 +1,19 @@
 <?php
 
-require_once 'CRM/Core/Form.php';
-
 /**
  * Form controller class
  *
- * @see http://wiki.civicrm.org/confluence/display/CRMDOC43/QuickForm+Reference
+ * @see http://wiki.civicrm.org/confluence/display/CRMDOC/QuickForm+Reference
  */
 class CRM_Netbanx_Form_NetbanxSettings extends CRM_Core_Form {
   function setDefaultValues() {
+    // FIXME: [ML] is this the correct pattern? seems overkill and weird.
     $defaults = $this->_values;
 
     $defaults = CRM_Core_BAO_Setting::getItem(NETBANX_SETTINGS_GROUP);
 
     if (! CRM_Utils_Array::value('netbanx_logo', $defaults)) {
-      $defaults = '';
+      $defaults = array();
     }
 
     return $defaults;
