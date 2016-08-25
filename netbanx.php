@@ -81,7 +81,7 @@ function netbanx_civicrm_buildForm($formName, &$form) {
     $f($form);
   }
 
-  $payment_input_forms = array(
+  $payment_forms = array(
     'CRM_Contribute_Form_Contribution_Main',
     'CRM_Event_Form_Registration_Register',
   );
