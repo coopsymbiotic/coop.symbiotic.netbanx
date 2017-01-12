@@ -80,13 +80,30 @@ function netbanx_civicrm_buildForm($formName, &$form) {
   if (function_exists($f)) {
     $f($form);
   }
+
+  $payment_forms = array(
+    'CRM_Contribute_Form_Contribution_Main',
+    'CRM_Event_Form_Registration_Register',
+  );
+
+  if (in_array($formName, $payment_forms)) {
+    netbanx_add_processor_logo($form);
+  }
 }
 
 /**
- * Form: CRM_Contribute_Form_Contribution_Main
+ * Display the Netbanx or Desjardins logo on the contribution form,
+ * near the payment block.
+ *
+ * Applies to forms:
+ * - CRM_Contribute_Form_Contribution_Main
+ * - CRM_Event_Form_Registration_Register
  */
-function netbanx_civicrm_buildForm_CRM_Contribute_Form_Contribution_Main(&$form) {
+function netbanx_add_processor_logo(&$form) {
   // Adds the credit card logo to the contribution page (billing block)
+  $logo_url = CRM_Core_Resources::singleton()->getUrl('coop.symbiotic.netbanx') . '/images/desjardins.png';
+  $form->assign('netbanx_logo_url', $logo_url);
+
   CRM_Core_Region::instance('billing-block')->add(array(
     'template' => 'CRM/Netbanx/Form/BillingBlockLogo.tpl',
     'weight' => -10,
@@ -101,6 +118,7 @@ function netbanx_civicrm_buildForm_CRM_Contribute_Form_Contribution_Main(&$form)
  */
 function netbanx_civicrm_buildForm_CRM_Contribute_Form_Contribution_ThankYou(&$form) {
   // Adds the credit card receipt from Netbanx to the contribution ThankYou page
+  // TODO: only do so if the payment processor is Netbanx?
   CRM_Core_Region::instance('contribution-thankyou-billing-block')->add(array(
     'template' => 'CRM/Netbanx/Form/ThankYouReceipt.tpl',
   ));

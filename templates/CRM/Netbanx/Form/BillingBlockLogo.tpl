@@ -1,3 +1,3 @@
 <div class="crm-netbanx-billing-logo">
-  <img src="/sites/www.devp.org/modules/extensions/ca.nodisys.netbanx/images/desjardins.png" title="Payment secured by Desjardins" alt="Payment secured by Desjardins" />
+  <img src="{$netbanx_logo_url}" title="{ts domain='coop.symbiotic.netbanx' escape='js'}Payment secured by Desjardins{/ts}" alt="{ts domain='coop.symbiotic.netbanx' escape='js'}Payment secured by Desjardins{/ts}" />
 </div>
