@@ -424,17 +424,13 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
         'Authorization' => 'Basic ' . base64_encode($api_username . ':' . $api_key),
       ];
 
-      $req = $client->createRequest('POST', $webservice_url, [
+      $response = $client->post($webservice_url, [
         'body' => json_encode($data),
         'headers' => $headers,
-        // FIXME: this is to avoid getting vague exceptions that do not explain
-        // the actual communication error (ex: Netbanx error description), but
-        // perhaps not the best practice?
-        'exceptions' => false,
       ]);
 
-      $response = $client->send($req);
-      $json = $response->json();
+      $json = $response->getBody()->getContents();
+      $json = json_decode($json, 1);
 
       $this->log($json, 'netbanx response ' . $description);
     }
