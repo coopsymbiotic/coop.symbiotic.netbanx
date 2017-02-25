@@ -174,8 +174,9 @@ function netbanx_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = arr
     $dao = CRM_Core_DAO::executeQuery('SELECT trxn_id FROM civicrm_contribution WHERE contact_id = %1 order by receive_date desc limit 1', $params);
 
     if (! $dao->fetch()) {
-      watchdog('netbanx', 'TX not found for ' . $contact_id);
-      CRM_Core_Error::debug_log_message('Netbanx receipt token failed for ' . $contact_id);
+      watchdog('netbanx', 'TX not found for contact_id=' . $cid);
+      CRM_Core_Error::debug_log_message('Netbanx receipt token failed for contact_id=' . $cid);
+      return;
     }
 
     $receipt = db_query("select receipt from {civicrm_netbanx_receipt} where trx_id = :tx", array(':tx' => $dao->trxn_id))->fetchField();
