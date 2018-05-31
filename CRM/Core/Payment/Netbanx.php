@@ -226,17 +226,17 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     $params['receipt_netbanx'] = self::generateReceipt($params, $response);
     $params['trxn_result_code'] = $response['id'];
 
-    db_query("INSERT INTO {civicrm_netbanx_receipt} (trx_id, receipt, first_name, last_name, card_type, card_number, timestamp, ip)
-              VALUES (:trx_id, :receipt, :first_name, :last_name, :card_type, :card_number, :timestamp, :ip)",
+    CRM_Core_DAO::executeQuery("INSERT INTO civicrm_netbanx_receipt (trx_id, receipt, first_name, last_name, card_type, card_number, timestamp, ip)
+              VALUES (%1, %2, %3, %4, %5, %6, %7, %8)",
               array(
-                ':trx_id' => $params['trxn_id'],
-                ':receipt' => $params['receipt_netbanx'],
-                ':first_name' => $params['first_name'],
-                ':last_name' => $params['last_name'],
-                ':card_type' => $params['credit_card_type'],
-                ':card_number' => self::netbanxGetCardForReceipt($params['credit_card_number']),
-                ':timestamp' => time(),
-                ':ip' => $this->ip,
+                1 => array($params['trxn_id'], 'String'),
+                2 => array($params['receipt_netbanx'], 'String'),
+                3 => array($params['first_name'], 'String'),
+                4 => array($params['last_name'], 'String'),
+                5 => array($params['credit_card_type'], 'String'),
+                6 => array(self::netbanxGetCardForReceipt($params['credit_card_number']), 'String'),
+                7 => array(time(), 'String'),
+                8 => array($this->ip, 'String'),
              ));
 
     // Invoke hook_civicrmdesjardins_success($params, $purchase).
@@ -565,9 +565,9 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
   function isTooManyTransactions($params) {
     $ip = $params['ip_address'];
 
-    $nb_tx_lately = db_query('SELECT count(*) from {civicrm_netbanx_receipt}
-       WHERE ip = :ip and timestamp > UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 1 HOUR))',
-       array(':ip' => $ip))->fetchField();
+    $nb_tx_lately = CRM_Core_DAO::singleValueQuery('SELECT count(*) from civicrm_netbanx_receipt
+       WHERE ip = %1 and timestamp > UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 1 HOUR))',
+       array(1 => array($ip, 'String')));
 
     if ($nb_tx_lately >= 400) {
       return TRUE;
@@ -660,9 +660,16 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
       reporterror_civicrm_handler($variables);
     }
 
-    db_query("INSERT INTO {civicrm_netbanx_log} (trx_id, timestamp, type, message, fail, ip)
-               VALUES (:trx_id, :timestamp, :type, :message, :fail, :ip)",
-              array(':trx_id' => $this->invoice_id, ':timestamp' => $time, ':type' => $type, ':message' => $message, ':fail' => $fail, ':ip' => $this->ip));
+    CRM_Core_DAO::executeQuery("INSERT INTO civicrm_netbanx_log (trx_id, timestamp, type, message, fail, ip) VALUES (%1, %2, %3, %4, %4, %5)",
+      array(
+        1 => array($this->invoice_id, 'String'),
+        2 => array($time, 'String'),
+        3 => array($type, 'String'),
+        4 => array($message, 'String'),
+        5 => array($fail, 'String'),
+        6 => array($this->ip, 'String'),
+      )
+    );
   }
 
   /**
@@ -821,7 +828,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     }
 
     // get province abbrev
-    $province = db_query('SELECT abbreviation FROM {civicrm_state_province} WHERE id = :id', array(':id' => $domain['values'][1]['domain_address']['state_province_id']))->fetchField();
+    $province = CRM_Core_DAO::singleValueQuery('SELECT abbreviation FROM civicrm_state_province WHERE id = %1', array(1 => array($domain['values'][1]['domain_address']['state_province_id'], 'Integer')));
     // $country = db_query('SELECT name FROM {civicrm_country} WHERE id = :id', array(':id' => $domain['values'][1]['domain_address']['country_id']))->fetchField();
 
     $receipt .= $org_name . "\n";
