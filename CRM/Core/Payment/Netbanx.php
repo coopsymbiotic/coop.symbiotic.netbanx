@@ -664,8 +664,8 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
       array(
         1 => array($this->invoice_id, 'String'),
         2 => array($time, 'String'),
-        3 => array($type, 'String'),
-        4 => array($message, 'String'),
+        3 => array(isset($type) ? $type : '', 'String'),
+        4 => array(isset($message) ? $message : '', 'String'),
         5 => array($fail, 'String'),
         6 => array($this->ip, 'String'),
       )
