@@ -158,10 +158,6 @@ function netbanx_civicrm_tokens(&$tokens) {
  * http://civicrm.org/blogs/colemanw/create-your-own-tokens-fun-and-profit
  */
 function netbanx_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = array(), $context = null) {
-  // Only expose the token when doing online contributions
-  /*if (! (arg(0) == 'civicrm' && (arg(1) == 'contribute' || arg(1) == 'event'))) {
-    return;
-  }*/
 
   Civi::log()->debug('netbanx context: ' . print_r($context, 1));
   Civi::log()->debug('netbanx CIDs: ' . print_r($cids, 1));
@@ -171,7 +167,16 @@ function netbanx_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = arr
     $params = array(
       1 => array($cid, 'Positive'),
     );
-    $dao = CRM_Core_DAO::executeQuery('SELECT trxn_id FROM civicrm_contribution WHERE contact_id = %1 order by receive_date desc limit 1', $params);
+    
+    // this token make sense only for real time transaction - limit to 1 hour after receipt is generated
+    $sql = "
+SELECT trxn_id 
+FROM civicrm_contribution 
+WHERE contact_id = %1 AND HOUR(TIMEDIFF(NOW(), receive_date)) < 1 
+ORDER BY receive_date 
+DESC LIMIT 1";
+
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
 
     if (! $dao->fetch()) {
       Civi::log()->debug('netbanx TX not found for ' . $contact_id);
