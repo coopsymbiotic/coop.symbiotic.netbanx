@@ -821,7 +821,10 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     // be the exact business name of the org, and sometimes we use shorter names.
     $domain = civicrm_api('Domain', 'get', array('version' => 3));
 
-    $org_name = variable_get('civicrmdesjardins_orgname', NULL);
+    $org_name = NULL;
+    if (function_exists('variable_get')) {    
+      $org_name = variable_get('civicrmdesjardins_orgname', NULL);
+    }
 
     if (! $org_name) {
       $org_name = $domain['values'][1]['name'];

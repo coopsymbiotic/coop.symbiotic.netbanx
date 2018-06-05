@@ -159,12 +159,12 @@ function netbanx_civicrm_tokens(&$tokens) {
  */
 function netbanx_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = array(), $context = null) {
   // Only expose the token when doing online contributions
-  if (! (arg(0) == 'civicrm' && (arg(1) == 'contribute' || arg(1) == 'event'))) {
+  /*if (! (arg(0) == 'civicrm' && (arg(1) == 'contribute' || arg(1) == 'event'))) {
     return;
-  }
+  }*/
 
-  watchdog('netbanx', 'Context: ' . print_r($context, 1));
-  watchdog('netbanx', 'CIDs: ' . print_r($cids, 1));
+  Civi::log()->debug('netbanx context: ' . print_r($context, 1));
+  Civi::log()->debug('netbanx CIDs: ' . print_r($cids, 1));
 
   foreach ($cids as $cid) {
     // Fetch the receipt (assume latest for a given contact ID)
@@ -174,7 +174,7 @@ function netbanx_civicrm_tokenValues(&$values, $cids, $job = null, $tokens = arr
     $dao = CRM_Core_DAO::executeQuery('SELECT trxn_id FROM civicrm_contribution WHERE contact_id = %1 order by receive_date desc limit 1', $params);
 
     if (! $dao->fetch()) {
-      watchdog('netbanx', 'TX not found for ' . $contact_id);
+      Civi::log()->debug('netbanx TX not found for ' . $contact_id);
       CRM_Core_Error::debug_log_message('Netbanx receipt token failed for ' . $contact_id);
     }
 
