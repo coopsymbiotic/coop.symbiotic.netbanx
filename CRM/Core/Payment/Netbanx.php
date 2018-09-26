@@ -240,7 +240,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
              ));
 
     // Invoke hook_civicrmdesjardins_success($params, $purchase).
-    module_invoke_all('civicrmdesjardins_success', $params, $response);
+    //module_invoke_all('civicrmdesjardins_success', $params, $response);
 
     return $params;
   }
