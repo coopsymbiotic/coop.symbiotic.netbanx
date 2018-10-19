@@ -240,7 +240,8 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
              ));
 
     // Invoke hook_civicrmdesjardins_success($params, $purchase).
-    module_invoke_all('civicrmdesjardins_success', $params, $response);
+    // [SV] does not work in non-drupal CMS
+    // module_invoke_all('civicrmdesjardins_success', $params, $response);
 
     return $params;
   }
@@ -720,18 +721,22 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
         }
     }
 
-    if (function_exists('variable_get')) {
-      $tos_url  = variable_get('civicrmdesjardins_tos_url', FALSE);
-      $tos_text = variable_get('civicrmdesjardins_tos_text', FALSE);
-
-      if ($tos_url) {
-        $receipt .= ts("Terms and conditions:") . "\n";
-        $receipt .= $tos_url . "\n\n";
+    // get tos url and text
+    $settings = array('netbanx_tos_url', 'netbanx_tos_text');
+    foreach ($settings as $setting) {
+      $ret = civicrm_api3('Setting', 'get', array('return' => [$setting], 'sequential' => 1));
+      if (isset($ret['values'][0][$setting])) {
+        $$setting = $ret['values'][0][$setting];
       }
+    }
 
-      if ($tos_text) {
-        $receipt .= wordwrap($tos_text);
-      }
+    if ($netbanx_tos_url) {
+      $receipt .= ts("Terms and conditions:") . "\n";
+      $receipt .= $netbanx_tos_url . "\n\n";
+    }
+
+    if ($netbanx_tos_text) {
+      $receipt .= wordwrap($netbanx_tos_text);
     }
 
     // Add obligatory notes:
