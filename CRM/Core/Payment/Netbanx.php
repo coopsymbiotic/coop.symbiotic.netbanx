@@ -731,7 +731,7 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     }
 
     if ($netbanx_tos_url) {
-      $receipt .= ts("Terms and conditions:") . "\n";
+      $receipt .= ts("Terms and conditions:", array('domain' => 'coop.symbiotic.netbanx')) . "\n";
       $receipt .= $netbanx_tos_url . "\n\n";
     }
 
@@ -846,6 +846,13 @@ class CRM_Core_Payment_Netbanx extends CRM_Core_Payment {
     $receipt .= $org_name . "\n";
     $receipt .= $domain['values'][1]['domain_address']['street_address'] . "\n";
     $receipt .= $domain['values'][1]['domain_address']['city'] . ', ' . $province;
+
+    if (!empty($domain['values'][1]['from_email'])) {
+      $receipt .=  "\n" . $domain['values'][1]['from_email'];
+    }
+    if (!empty($domain['values'][1]['domain_phone'])) {
+      $receipt .= "\n" . $domain['values'][1]['domain_phone']['phone'];
+    }
 
     return $receipt;
   }
